@@ -1,16 +1,18 @@
 """Support for Xiaomi Miio binary sensors."""
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 import logging
-from typing import Callable
 
 from homeassistant.components.binary_sensor import (
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
-from homeassistant.components.xiaomi_miio.device import XiaomiCoordinatedMiioEntity
 from homeassistant.core import callback
+from homeassistant.helpers.entity import EntityCategory
+
+from .device import XiaomiCoordinatedMiioEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -37,12 +39,16 @@ class XiaomiBinarySensor(XiaomiCoordinatedMiioEntity, BinarySensorEntity):
 
         super().__init__(device, entry, unique_id, coordinator)
 
+        entity_category = None
+        if "entity_category" in sensor.extras:
+            entity_category = EntityCategory(sensor.extras.get("entity_category"))
+
         description = XiaomiBinarySensorDescription(
             key=sensor.id,
             name=sensor.name,
             icon=sensor.extras.get("icon"),
             device_class=sensor.extras.get("device_class"),
-            entity_category=sensor.extras.get("entity_category"),
+            entity_category=entity_category,
         )
 
         self.entity_description = description

@@ -4,8 +4,10 @@ from __future__ import annotations
 import logging
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
-from homeassistant.components.xiaomi_miio.device import XiaomiCoordinatedMiioEntity
 from homeassistant.core import callback
+from homeassistant.helpers.entity import EntityCategory
+
+from .device import XiaomiCoordinatedMiioEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -25,12 +27,16 @@ class XiaomiSwitch(XiaomiCoordinatedMiioEntity, SwitchEntity):
 
         super().__init__(device, entry, unique_id, coordinator)
 
+        entity_category = None
+        if "entity_category" in switch.extras:
+            entity_category = EntityCategory(switch.extras.get("entity_category"))
+
         description = SwitchEntityDescription(
             key=switch.id,
             name=name,
             icon=switch.extras.get("icon"),
             device_class=switch.extras.get("device_class"),
-            entity_category=switch.extras.get("entity_category"),
+            entity_category=entity_category,
         )
 
         _LOGGER.debug("Adding switch: %s", description)

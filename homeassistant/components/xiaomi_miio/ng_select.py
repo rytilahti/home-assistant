@@ -4,8 +4,10 @@ from __future__ import annotations
 import logging
 
 from homeassistant.components.select import SelectEntity, SelectEntityDescription
-from homeassistant.components.xiaomi_miio.device import XiaomiCoordinatedMiioEntity
 from homeassistant.core import callback
+from homeassistant.helpers.entity import EntityCategory
+
+from .device import XiaomiCoordinatedMiioEntity
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,16 +25,18 @@ class XiaomiSelect(XiaomiCoordinatedMiioEntity, SelectEntity):
 
         super().__init__(device, entry, unique_id, coordinator)
         self._choices = setting.choices
-        self._attr_current_option = (
-            None  # TODO we don't know the value, but the parent wants it?
-        )
+        self._attr_current_option = None  # TODO we don't know the value, but the parent wants it? # pylint: disable=fixme
+
+        entity_category = None
+        if "entity_category" in setting.extras:
+            entity_category = EntityCategory(setting.extras.get("entity_category"))
 
         self.entity_description = SelectEntityDescription(
             key=setting.id,
             name=setting.name,
             icon=setting.extras.get("icon"),
             device_class=setting.extras.get("device_class"),
-            entity_category=setting.extras.get("entity_category"),
+            entity_category=entity_category,
             # entity_category=EntityCategory.CONFIG,
         )
         self._attr_options = [x.name for x in self._choices]
