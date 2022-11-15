@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import logging
 
+from miio.descriptors import SettingType
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -28,8 +30,6 @@ async def async_setup_entry(
 
     # Handle switches defined by the backing class.
     for setting in device.settings().values():
-        from miio.descriptors import SettingType
-
         if setting.type == SettingType.Number:
             _LOGGER.debug("Adding new number setting: %s", setting)
             entities.append(XiaomiNumber(device, setting, config_entry, coordinator))

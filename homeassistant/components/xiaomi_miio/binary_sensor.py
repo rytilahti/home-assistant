@@ -25,10 +25,10 @@ async def async_setup_entry(
     coordinator = hass.data[DOMAIN][config_entry.entry_id][KEY_COORDINATOR]
     for sensor in device.sensors().values():
         if sensor.type == bool:
-            breakpoint()
             if getattr(coordinator.data, sensor.property) is None:
                 # TODO: we might need to rethink this, as some properties (e.g., mop settings)
-                #       are none depending on the device mode
+                #       are none depending on the device mode at least for miio devices
+                #       maybe these should just default to be disabled?
                 _LOGGER.debug("Skipping %s as it's value was None", sensor.property)
                 continue
 
