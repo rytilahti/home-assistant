@@ -158,18 +158,6 @@ MODELS_AIR_QUALITY_MONITOR = [
 
 # Model lists
 MODELS_GATEWAY = ["lumi.gateway", "lumi.acpartner"]
-MODELS_SWITCH = [
-    "chuangmi.plug.v1",
-    "chuangmi.plug.v3",
-    "chuangmi.plug.hmi208",
-    "qmi.powerstrip.v1",
-    "zimi.powerstrip.v2",
-    "chuangmi.plug.m1",
-    "chuangmi.plug.m3",
-    "chuangmi.plug.v2",
-    "chuangmi.plug.hmi205",
-    "chuangmi.plug.hmi206",
-]
 MODELS_FAN = (
     MODELS_PURIFIER_MIIO + MODELS_PURIFIER_MIOT + MODELS_FAN_MIIO + MODELS_FAN_MIOT
 )

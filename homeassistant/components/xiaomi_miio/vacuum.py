@@ -46,28 +46,9 @@ async def async_setup_entry(
     )
     entities.append(vacuum)
 
+    # TODO: add support for custom services (based on actions taking inputs) when implemented in python-miio
+
     async_add_entities(entities, update_before_add=True)
-
-    """
-    TODO: this platform previously exported the following services that are very specific
-           to specific vacuum integrations supported by python-miio.
-           rather than hardcoding these, python-miio should be improved to expose enough information
-           for homeassistant to expose these services dynamically:
-            * vacuum_remote_control_move
-            * vacuum_remote_control_move_step
-            * vacuum_remote_control_start
-            * vacuum_remote_control_stop
-            * vacuum_clean_segment
-            * vacuum_clean_zone
-            * vacuum_goto
-
-    platform = entity_platform.async_get_current_platform()
-    platform.async_register_entity_service(
-        SERVICE_START_REMOTE_CONTROL,
-        {},
-        XiaomiVacuum.async_remote_control_start.__name__,
-    )
-    """
 
 
 class XiaomiVacuum(

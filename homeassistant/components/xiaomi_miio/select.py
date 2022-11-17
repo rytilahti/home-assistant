@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import logging
 
+from miio.descriptors import SettingType
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -25,8 +27,6 @@ async def async_setup_entry(
     entities = []
     device = hass.data[DOMAIN][config_entry.entry_id][KEY_DEVICE]
     coordinator = hass.data[DOMAIN][config_entry.entry_id][KEY_COORDINATOR]
-
-    from miio.descriptors import SettingType
 
     for setting in device.settings().values():
         if setting.type == SettingType.Enum:

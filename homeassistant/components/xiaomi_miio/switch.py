@@ -32,6 +32,8 @@ async def async_setup_entry(
     if DATA_KEY not in hass.data:
         hass.data[DATA_KEY] = {}
 
+    # TODO: special handling for switch devices
+
     switches = filter(
         lambda x: x.type == SettingType.Boolean, device.settings().values()
     )
