@@ -6,7 +6,7 @@ import logging
 from typing import Any, TypeVar
 
 from construct.core import ChecksumError
-from miio import Device, DeviceException
+from miio import Device, DeviceException, DeviceInfo as MiioDeviceInfo
 
 from homeassistant.const import ATTR_CONNECTIONS, CONF_MODEL
 from homeassistant.helpers import device_registry as dr
@@ -75,10 +75,12 @@ class XiaomiMiioEntity(CoordinatorEntity[_T]):
 
     _attr_has_entity_name = True
 
-    def __init__(self, device, entry, unique_id, coordinator):
+    def __init__(self, device: Device, entry, unique_id, coordinator):
         """Initialize the coordinated Xiaomi Miio Device."""
         super().__init__(coordinator)
         self._device = device
+        # TODO: make sure cached data is always used
+        self._device_info: MiioDeviceInfo = device.info()
         self._model = entry.data[CONF_MODEL]
         self._mac = entry.data[CONF_MAC]
         self._device_id = entry.unique_id
@@ -91,9 +93,11 @@ class XiaomiMiioEntity(CoordinatorEntity[_T]):
         """Return the device info."""
         device_info = DeviceInfo(
             identifiers={(DOMAIN, self._device_id)},
-            manufacturer="Xiaomi",
+            default_manufacturer="Xiaomi",
             model=self._model,
             name=self._device_name,
+            hw_version=self._device_info.hardware_version,
+            sw_version=self._device_info.firmware_version,
         )
 
         if self._mac is not None:
