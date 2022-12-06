@@ -134,9 +134,12 @@ async def async_create_miio_device_and_coordinator(
 
     _LOGGER.debug("Initializing with host %s (token %s...)", host, token[:5])
 
+    def _create_dev_instance():
+        return DeviceFactory.create(host, token, model=model, force_generic_miot=True)
+
     # TODO: run in executor, this potentially performs I/O to find the model and initialize miot
     try:
-        device = DeviceFactory.create(host, token, model=model, force_generic_miot=True)
+        device = await hass.async_add_executor_job(_create_dev_instance)
     except DeviceException:
         _LOGGER.warning("Tried to initialize unsupported %s, skipping", model)
         raise
